@@ -1,0 +1,9 @@
+# Official spec has no published license: keep local copies out of the repo
+*.apib
+# Local eval runs, caches, secrets
+*-workspace/
+evals/results/
+__pycache__/
+*.pyc
+.env
+.DS_Store

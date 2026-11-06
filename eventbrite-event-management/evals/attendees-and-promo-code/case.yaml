@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: attendees-and-promo-code
+expected_outcome: |
+  A plan that pages through GET /events/1201112223/attendees/?status=attending following continuation tokens, writes name/email/ticket_class_name/checked_in to CSV, and creates a coded discount via POST /organizations/{org}/discounts/ with percent_off 20, quantity_available 30 and end_date 2026-12-18T23:59:00 as naive local time.

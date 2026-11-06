@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: copy-last-show-paid
+expected_outcome: |
+  A plan that uses POST /events/1187654321/copy/ with the new UTC dates (19:30Z-21:30Z), then creates or fixes two paid ticket classes with costs EUR,700 and EUR,1000, the regular one gated by sales_start_after on the early-bird ID, warns that payouts/payment options must be configured in the web UI before a paid event can publish, and asks to verify what the copy carried over.

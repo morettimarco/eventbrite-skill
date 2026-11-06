@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: weekly-series-thursdays
+expected_outcome: |
+  A plan in ./plan/ that lists or reuses the venue, creates ONE series parent (is_series true, locale it_IT, category 105 / subcategory 5010), adds a weekly schedule of 8 occurrences at 20:00Z (21:00 CET) with a 7200 s duration, adds one free ticket class on the parent with capacity 50, maximum_quantity 4 and sales_end_relative, and stops before publishing.
