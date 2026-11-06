@@ -83,12 +83,14 @@ Issues and PRs are welcome, especially ones that confirm or correct **(spec)** n
 
 ### Releasing
 
-Releases are built by `.github/workflows/release.yml`. Push an annotated tag and the Action zips the skill (without `evals/`) and attaches the `.skill` file to a new GitHub release, using the tag message as the release notes:
+Releases are built by `.github/workflows/release.yml`, which zips the skill (without `evals/`) and attaches the `.skill` file to a new GitHub release. There are two ways to trigger it:
 
-```bash
-git tag -a v2.0.1 -m "What changed"
-git push origin v2.0.1
-```
+- **From GitHub:** go to Actions → *Release .skill* → **Run workflow** and type the new version (e.g. `v2.0.1`). The notes come from `.github/release-notes.md` plus an auto-generated changelog.
+- **From a terminal:** push an annotated tag; its message becomes the release notes.
+  ```bash
+  git tag -a v2.0.1 -m "What changed"
+  git push origin v2.0.1
+  ```
 
 ## License
 
