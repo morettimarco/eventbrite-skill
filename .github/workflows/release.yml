@@ -1,0 +1,59 @@
+name: Release .skill
+
+# Push a tag like v2.0.1 (annotated, its message becomes the release notes)
+# and this builds eventbrite-event-management.skill and attaches it to a GitHub release.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      SKILL: eventbrite-event-management
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate SKILL.md frontmatter
+        run: |
+          python3 - <<'PY'
+          import re, sys, yaml
+          s = open("eventbrite-event-management/SKILL.md").read()
+          m = re.match(r"^---\n(.*?)\n---", s, re.S)
+          if not m: sys.exit("SKILL.md has no frontmatter")
+          fm = yaml.safe_load(m.group(1))
+          for k in ("name", "description"):
+              if not fm.get(k): sys.exit(f"missing {k}")
+          if len(fm["description"]) > 1024 or "<" in fm["description"]:
+              sys.exit("description too long or contains angle brackets")
+          extra = set(fm) - {"name", "description", "license", "allowed-tools", "metadata", "compatibility"}
+          if extra: sys.exit(f"unexpected frontmatter keys: {extra}")
+          print("SKILL.md OK:", fm["name"])
+          PY
+
+      - name: Build .skill
+        run: |
+          zip -r "$SKILL.skill" "$SKILL" \
+            -x "$SKILL/evals/*" "*/__pycache__/*" "*.pyc" "*.apib" "*.DS_Store"
+          unzip -l "$SKILL.skill"
+
+      - name: Publish release
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" "$SKILL.skill" \
+            --title "$GITHUB_REF_NAME" --notes-from-tag --verify-tag
+
+      - name: Keep build as artifact (manual runs)
+        if: "!startsWith(github.ref, 'refs/tags/')"
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.SKILL }}.skill
+          path: ${{ env.SKILL }}.skill

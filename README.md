@@ -38,14 +38,19 @@ If you use a **(spec)** flow and it works (or doesn't), please open an issue or 
 
 ## Install
 
-**Claude apps (claude.ai / desktop):** zip the `eventbrite-event-management` folder and upload it under Settings → Capabilities → Skills, or ask Claude to package it for you.
+**Claude apps (claude.ai / desktop):**
+
+1. Download **[eventbrite-event-management.skill](https://github.com/morettimarco/eventbrite-skill/releases/latest/download/eventbrite-event-management.skill)** (latest release).
+2. Upload it under Settings → Capabilities → Skills, or drop it into a chat with Claude and click **Save skill**.
 
 **Claude Code:**
 
 ```bash
-git clone https://github.com/morettimarco/eventbrite-skill
-cp -r eventbrite-skill/eventbrite-event-management ~/.claude/skills/
+curl -L -o /tmp/eb.skill https://github.com/morettimarco/eventbrite-skill/releases/latest/download/eventbrite-event-management.skill
+unzip -o /tmp/eb.skill -d ~/.claude/skills/
 ```
+
+Or, from a clone: `cp -r eventbrite-skill/eventbrite-event-management ~/.claude/skills/`.
 
 Then give Claude your token. Create a private token at <https://www.eventbrite.com/platform/api-keys>, and either export it as `EVENTBRITE_TOKEN` or paste it when Claude asks. Treat it like a password: it has full access to your Eventbrite account.
 
@@ -75,6 +80,15 @@ python3 scripts/eb.py POST /organizations/{org}/events/ --json event.json
 ## Contributing
 
 Issues and PRs are welcome, especially ones that confirm or correct **(spec)** notes with real API responses. Please don't include tokens, attendee data or real event IDs in issues.
+
+### Releasing
+
+Releases are built by `.github/workflows/release.yml`. Push an annotated tag and the Action zips the skill (without `evals/`) and attaches the `.skill` file to a new GitHub release, using the tag message as the release notes:
+
+```bash
+git tag -a v2.0.1 -m "What changed"
+git push origin v2.0.1
+```
 
 ## License
 
